@@ -3,9 +3,6 @@ package com.rbkmoney.magista.dsl;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-/**
- * Created by vpankrashkin on 29.08.16.
- */
 public class BaseQueryResult<T, CT> implements QueryResult<T, CT> {
     private final Supplier<Stream<T>> streamSupplier;
     private final Supplier<CT> collectedSuppier;

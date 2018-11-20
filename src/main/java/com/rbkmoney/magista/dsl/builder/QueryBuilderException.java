@@ -2,9 +2,6 @@ package com.rbkmoney.magista.dsl.builder;
 
 import com.rbkmoney.magista.dsl.QueryProcessingException;
 
-/**
- * Created by vpankrashkin on 24.08.16.
- */
 public class QueryBuilderException extends QueryProcessingException {
     public QueryBuilderException() {
     }

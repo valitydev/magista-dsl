@@ -16,9 +16,6 @@ import java.util.stream.Stream;
 
 import static com.rbkmoney.magista.dsl.Parameters.QUERY_PARAMETER;
 
-/**
- * Created by vpankrashkin on 23.08.16.
- */
 public class RootQuery extends BaseQuery {
     private final Query childQuery;
 

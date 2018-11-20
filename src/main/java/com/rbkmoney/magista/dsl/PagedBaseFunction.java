@@ -3,12 +3,8 @@ package com.rbkmoney.magista.dsl;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.rbkmoney.magista.dsl.Parameters.FROM_PARAMETER;
 import static com.rbkmoney.magista.dsl.Parameters.SIZE_PARAMETER;
 
-/**
- * Created by vpankrashkin on 23.08.16.
- */
 public abstract class PagedBaseFunction<T, CT> extends BaseFunction<T, CT> {
 
     public static final int MAX_SIZE_VALUE = 1000;
@@ -36,10 +32,6 @@ public abstract class PagedBaseFunction<T, CT> extends BaseFunction<T, CT> {
 
         public PagedBaseParameters(QueryParameters parameters, QueryParameters derivedParameters) {
             super(parameters, derivedParameters);
-        }
-
-        public Integer getFrom() {
-            return getIntParameter(FROM_PARAMETER, true);
         }
 
         public Integer getSize() {

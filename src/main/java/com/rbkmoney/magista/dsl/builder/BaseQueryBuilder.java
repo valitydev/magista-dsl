@@ -11,9 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by vpankrashkin on 24.08.16.
- */
 public abstract class BaseQueryBuilder implements QueryBuilder {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 

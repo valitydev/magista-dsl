@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Created by vpankrashkin on 25.08.16.
- */
 public abstract class BaseQueryParser implements QueryParser<Map<String, Object>> {
 
     private final List<QueryParser<Map<String, Object>>> parsers;

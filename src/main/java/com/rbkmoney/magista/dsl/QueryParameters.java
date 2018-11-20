@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * Created by vpankrashkin on 23.08.16.
- */
 public class QueryParameters {
     public interface QueryParametersRef<T extends QueryParameters> {
         T newInstance(Map<String, Object> parameters, QueryParameters derivedParameters);

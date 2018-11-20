@@ -1,9 +1,5 @@
 package com.rbkmoney.magista.dsl;
 
-
-/**
- * Created by vpankrashkin on 04.08.16.
- */
 public abstract class BaseQuery<T, CT> implements Query<T, CT> {
     private final Object descriptor;
     private QueryParameters queryParameters;

@@ -1,8 +1,5 @@
 package com.rbkmoney.magista.dsl;
 
-/**
- * Created by vpankrashkin on 09.08.16.
- */
 public class QueryExecutionException extends QueryProcessingException {
     public QueryExecutionException() {
     }

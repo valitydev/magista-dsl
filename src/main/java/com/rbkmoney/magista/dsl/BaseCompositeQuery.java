@@ -6,9 +6,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- * Created by vpankrashkin on 03.08.16.
- */
 public class BaseCompositeQuery<T, CT> extends BaseQuery<T, CT> implements CompositeQuery<T, CT> {
     private List<Query> queries;
     private final Function<QueryContext, QueryResult<T, CT>> execFunction;

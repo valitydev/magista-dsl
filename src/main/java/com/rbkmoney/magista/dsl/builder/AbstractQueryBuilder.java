@@ -10,9 +10,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by vpankrashkin on 28.08.16.
- */
 public abstract class AbstractQueryBuilder implements QueryBuilder {
 
     protected Stream<QueryPart> getMatchedPartsStream(Object descriptor, List<QueryPart> queryParts) {

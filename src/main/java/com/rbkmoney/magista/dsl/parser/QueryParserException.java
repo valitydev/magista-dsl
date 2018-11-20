@@ -2,9 +2,6 @@ package com.rbkmoney.magista.dsl.parser;
 
 import com.rbkmoney.magista.dsl.QueryExecutionException;
 
-/**
- * Created by vpankrashkin on 24.08.16.
- */
 public class QueryParserException extends QueryExecutionException {
     public QueryParserException() {
     }

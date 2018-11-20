@@ -3,9 +3,6 @@ package com.rbkmoney.magista.dsl;
 import java.time.Instant;
 import java.time.temporal.TemporalAccessor;
 
-/**
- * Created by vpankrashkin on 23.08.16.
- */
 public abstract class BaseQueryValidator implements QueryValidator {
     @Override
     public void validateParameters(QueryParameters parameters) throws IllegalArgumentException {

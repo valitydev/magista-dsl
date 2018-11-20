@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by vpankrashkin on 09.08.16.
- */
 public class JsonQueryParser implements QueryParser<String> {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());

@@ -4,9 +4,6 @@ import com.rbkmoney.magista.dsl.QueryParameters;
 
 import java.util.List;
 
-/**
- * Created by vpankrashkin on 24.08.16.
- */
 public class QueryPart {
     public static final Object DEFAULT_DESCRIPTOR = "default_descriptor";
     private final Object descriptor;

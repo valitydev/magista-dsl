@@ -5,9 +5,6 @@ import com.rbkmoney.magista.dsl.QueryValidator;
 
 import java.util.Map;
 
-/**
- * Created by vpankrashkin on 25.08.16.
- */
 public abstract class AbstractQueryParser implements QueryParser<Map<String, Object>> {
 
     protected QueryParameters getParameters(QueryPart queryPart) {

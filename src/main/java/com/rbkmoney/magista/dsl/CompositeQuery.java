@@ -2,9 +2,6 @@ package com.rbkmoney.magista.dsl;
 
 import java.util.List;
 
-/**
- * Created by vpankrashkin on 28.08.16.
- */
 public interface CompositeQuery<T, CT> extends Query<T, CT> {
     List<Query> getChildQueries();
 
