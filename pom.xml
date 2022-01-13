@@ -11,8 +11,33 @@
     </parent>
 
     <artifactId>magista-dsl</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
+
+    <name>Magista DSL</name>
+    <description>DSL library for Magista services</description>
+    <url>https://github.com/valitydev/magista-dsl</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <email>devs@vality.dev</email>
+            <organization>Vality</organization>
+            <organizationUrl>https://vality.dev</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/valitydev/magista-dsl.git</connection>
+        <developerConnection>scm:git:ssh://github.com/valitydev/magista-dsl.git</developerConnection>
+        <url>https://github.com/valitydev/magista-dsl/tree/master</url>
+    </scm>
 
     <dependencies>
         <dependency>
