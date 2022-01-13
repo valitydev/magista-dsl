@@ -1,0 +1,60 @@
+package dev.vality.magista.dsl.parser;
+
+import dev.vality.magista.dsl.QueryParameters;
+
+import java.util.List;
+
+public class QueryPart {
+    public static final Object DEFAULT_DESCRIPTOR = "default_descriptor";
+    private final Object descriptor;
+    private final QueryParameters parameters;
+    private List<QueryPart> children;
+    private final QueryPart parent;
+
+    public QueryPart(Object descriptor, QueryParameters parameters) {
+        this(descriptor, parameters, null);
+    }
+
+    public QueryPart(Object descriptor, QueryParameters parameters, QueryPart parent) {
+        if (descriptor == null || parameters == null) {
+            throw new NullPointerException("Null arguments're not allowed");
+        }
+        this.descriptor = descriptor;
+        this.parameters = parameters;
+        this.parent = parent;
+    }
+
+    public Object getDescriptor() {
+        return descriptor;
+    }
+
+    public QueryParameters getParameters() {
+        return parameters;
+    }
+
+    public List<QueryPart> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<QueryPart> children) {
+        this.children = children;
+    }
+
+    public QueryPart getParent() {
+        return parent;
+    }
+
+    public boolean isEmpty() {
+        return descriptor.equals(DEFAULT_DESCRIPTOR) && parameters.getParametersMap().isEmpty() && (children == null || children.isEmpty());
+    }
+
+    @Override
+    public String toString() {
+        return "QueryPart{" +
+                "descriptor=" + descriptor +
+                ", parameters=" + parameters +
+                ", children=" + children +
+                ", parent=" + (parent == null ? "null" : "notnull") +
+                '}';
+    }
+}
