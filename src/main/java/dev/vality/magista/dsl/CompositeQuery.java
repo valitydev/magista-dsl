@@ -9,7 +9,8 @@ public interface CompositeQuery<T, CT> extends Query<T, CT> {
         return false;
     }
 
-    default QueryResult<T, CT> execute(QueryContext context, List<QueryResult> collectedResults) throws QueryExecutionException {
+    default QueryResult<T, CT> execute(QueryContext context, List<QueryResult> collectedResults)
+            throws QueryExecutionException {
         throw new UnsupportedOperationException("Explicit implementation required");
     }
 

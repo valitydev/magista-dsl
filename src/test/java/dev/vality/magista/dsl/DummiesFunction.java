@@ -15,46 +15,53 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DummiesFunction extends PagedBaseFunction<Map.Entry<Long, Dummy>, StatTestResponse> implements CompositeQuery<Map.Entry<Long, Dummy>, StatTestResponse> {
+public class DummiesFunction extends PagedBaseFunction<Map.Entry<Long, Dummy>, StatTestResponse>
+        implements CompositeQuery<Map.Entry<Long, Dummy>, StatTestResponse> {
 
     public static final String FUNC_NAME = "dummies";
 
     private final CompositeQuery<QueryResult, List<QueryResult>> subquery;
 
-    private DummiesFunction(Object descriptor, QueryParameters params, String continuationToken, CompositeQuery<QueryResult, List<QueryResult>> subquery) {
+    private DummiesFunction(Object descriptor, QueryParameters params, String continuationToken,
+                            CompositeQuery<QueryResult, List<QueryResult>> subquery) {
         super(descriptor, params, FUNC_NAME, continuationToken);
         this.subquery = subquery;
     }
 
+    private static DummiesFunction createDummiesFunction(Object descriptor, QueryParameters queryParameters,
+                                                         String continuationToken,
+                                                         CompositeQuery<QueryResult, List<QueryResult>> subquery) {
+        DummiesFunction dummiesFunction = new DummiesFunction(descriptor, queryParameters, continuationToken, subquery);
+        subquery.setParentQuery(dummiesFunction);
+        return dummiesFunction;
+    }
+
     @Override
-    public QueryResult<Map.Entry<Long, Dummy>, StatTestResponse> execute(QueryContext context) throws QueryExecutionException {
+    public QueryResult<Map.Entry<Long, Dummy>, StatTestResponse> execute(QueryContext context)
+            throws QueryExecutionException {
         QueryResult<QueryResult, List<QueryResult>> collectedResults = subquery.execute(context);
 
         return execute(context, collectedResults.getCollectedStream());
     }
 
     @Override
-    public QueryResult<Map.Entry<Long, Dummy>, StatTestResponse> execute(QueryContext context, List<QueryResult> collectedResults) throws QueryExecutionException {
-        QueryResult<Map.Entry<Long, Dummy>, List<Map.Entry<Long, Dummy>>> dummiesResult = (QueryResult<Map.Entry<Long, Dummy>, List<Map.Entry<Long, Dummy>>>) collectedResults.get(0);
+    public QueryResult<Map.Entry<Long, Dummy>, StatTestResponse> execute(QueryContext context,
+                                                                         List<QueryResult> collectedResults)
+            throws QueryExecutionException {
+        QueryResult<Map.Entry<Long, Dummy>, List<Map.Entry<Long, Dummy>>> dummiesResult =
+                (QueryResult<Map.Entry<Long, Dummy>, List<Map.Entry<Long, Dummy>>>) collectedResults.get(0);
 
-        return new BaseQueryResult<>(
-                () -> dummiesResult.getDataStream(),
-                () -> {
-                    List<Dummy> statResponseData = dummiesResult.getDataStream()
-                            .map(dummyEntry -> dummyEntry.getValue()).collect(Collectors.toList());
-                    StatTestResponse statResponse = new StatTestResponse(statResponseData);
-                    List<Map.Entry<Long, Dummy>> dummyStats = dummiesResult.getCollectedStream();
-                    if (!dummiesResult.getCollectedStream().isEmpty() && getQueryParameters().getSize() == dummyStats.size()) {
-                        statResponse.setContinuationToken(
-                                TokenUtil.buildToken(
-                                        getQueryParameters(),
-                                        dummyStats.get(dummyStats.size() - 1).getKey()
-                                )
-                        );
-                    }
-                    return statResponse;
-                }
-        );
+        return new BaseQueryResult<>(() -> dummiesResult.getDataStream(), () -> {
+            List<Dummy> statResponseData =
+                    dummiesResult.getDataStream().map(dummyEntry -> dummyEntry.getValue()).collect(Collectors.toList());
+            StatTestResponse statResponse = new StatTestResponse(statResponseData);
+            List<Map.Entry<Long, Dummy>> dummyStats = dummiesResult.getCollectedStream();
+            if (!dummiesResult.getCollectedStream().isEmpty() && getQueryParameters().getSize() == dummyStats.size()) {
+                statResponse.setContinuationToken(
+                        TokenUtil.buildToken(getQueryParameters(), dummyStats.get(dummyStats.size() - 1).getKey()));
+            }
+            return statResponse;
+        });
     }
 
     @Override
@@ -122,51 +129,47 @@ public class DummiesFunction extends PagedBaseFunction<Map.Entry<Long, Dummy>, S
     }
 
     public static class DummiesParser extends AbstractQueryParser {
-        private DummiesValidator validator = new DummiesValidator();
+        private final DummiesValidator validator = new DummiesValidator();
+
+        public static String getMainDescriptor() {
+            return FUNC_NAME;
+        }
 
         @Override
         public List<QueryPart> parseQuery(Map<String, Object> source, QueryPart parent) throws QueryParserException {
             Map<String, Object> funcSource = (Map) source.get(FUNC_NAME);
             TestParameters parameters = getValidatedParameters(funcSource, parent, TestParameters::new, validator);
 
-            return Stream.of(
-                    new QueryPart(FUNC_NAME, parameters, parent)
-            )
-                    .collect(Collectors.toList());
+            return Stream.of(new QueryPart(FUNC_NAME, parameters, parent)).collect(Collectors.toList());
         }
 
         @Override
         public boolean apply(Map source, QueryPart parent) {
-            return parent != null
-                    && RootQuery.RootParser.getMainDescriptor().equals(parent.getDescriptor())
+            return parent != null && RootQuery.RootParser.getMainDescriptor().equals(parent.getDescriptor())
                     && (source.get(FUNC_NAME) instanceof Map);
-        }
-
-        public static String getMainDescriptor() {
-            return FUNC_NAME;
         }
     }
 
     public static class DummiesBuilder extends AbstractQueryBuilder {
-        private DummiesValidator validator = new DummiesValidator();
+        private final DummiesValidator validator = new DummiesValidator();
 
         @Override
-        public Query buildQuery(List<QueryPart> queryParts, String continuationToken, QueryPart parentQueryPart, QueryBuilder baseBuilder) throws QueryBuilderException {
-            Query resultQuery = buildSingleQuery(DummiesParser.getMainDescriptor(), queryParts, queryPart -> createQuery(queryPart, continuationToken));
+        public Query buildQuery(List<QueryPart> queryParts, String continuationToken, QueryPart parentQueryPart,
+                                QueryBuilder baseBuilder) throws QueryBuilderException {
+            Query resultQuery = buildSingleQuery(DummiesParser.getMainDescriptor(), queryParts,
+                    queryPart -> createQuery(queryPart, continuationToken));
             validator.validateQuery(resultQuery);
             return resultQuery;
         }
 
         private CompositeQuery createQuery(QueryPart queryPart, String continuationToken) {
             List<Query> queries = Arrays.asList(
-                    new GetDataFunction(queryPart.getDescriptor() + ":" + GetDataFunction.FUNC_NAME, queryPart.getParameters(), continuationToken)
-            );
-            CompositeQuery<QueryResult, List<QueryResult>> compositeQuery = createCompositeQuery(
-                    queryPart.getDescriptor(),
-                    getParameters(queryPart.getParent()),
-                    queries
-            );
-            return createDummiesFunction(queryPart.getDescriptor(), queryPart.getParameters(), continuationToken, compositeQuery);
+                    new GetDataFunction(queryPart.getDescriptor() + ":" + GetDataFunction.FUNC_NAME,
+                            queryPart.getParameters(), continuationToken));
+            CompositeQuery<QueryResult, List<QueryResult>> compositeQuery =
+                    createCompositeQuery(queryPart.getDescriptor(), getParameters(queryPart.getParent()), queries);
+            return createDummiesFunction(queryPart.getDescriptor(), queryPart.getParameters(), continuationToken,
+                    compositeQuery);
         }
 
         @Override
@@ -175,13 +178,8 @@ public class DummiesFunction extends PagedBaseFunction<Map.Entry<Long, Dummy>, S
         }
     }
 
-    private static DummiesFunction createDummiesFunction(Object descriptor, QueryParameters queryParameters, String continuationToken, CompositeQuery<QueryResult, List<QueryResult>> subquery) {
-        DummiesFunction dummiesFunction = new DummiesFunction(descriptor, queryParameters, continuationToken, subquery);
-        subquery.setParentQuery(dummiesFunction);
-        return dummiesFunction;
-    }
-
-    private static class GetDataFunction extends PagedBaseFunction<Map.Entry<Long, Dummy>, Collection<Map.Entry<Long, Dummy>>> {
+    private static class GetDataFunction
+            extends PagedBaseFunction<Map.Entry<Long, Dummy>, Collection<Map.Entry<Long, Dummy>>> {
         private static final String FUNC_NAME = DummiesFunction.FUNC_NAME + "_data";
 
         public GetDataFunction(Object descriptor, QueryParameters params, String continuationToken) {
@@ -193,12 +191,12 @@ public class DummiesFunction extends PagedBaseFunction<Map.Entry<Long, Dummy>, S
         }
 
         @Override
-        public QueryResult<Map.Entry<Long, Dummy>, Collection<Map.Entry<Long, Dummy>>> execute(QueryContext context) throws QueryExecutionException {
+        public QueryResult<Map.Entry<Long, Dummy>, Collection<Map.Entry<Long, Dummy>>> execute(QueryContext context)
+                throws QueryExecutionException {
             TestQueryContext functionContext = getContext(context);
-            TestParameters parameters = new TestParameters(getQueryParameters(), getQueryParameters().getDerivedParameters());
-            Collection<Map.Entry<Long, Dummy>> result = functionContext.getSearchDao().getDummies(
-                    parameters.getId()
-            );
+            TestParameters parameters =
+                    new TestParameters(getQueryParameters(), getQueryParameters().getDerivedParameters());
+            Collection<Map.Entry<Long, Dummy>> result = functionContext.getSearchDao().getDummies(parameters.getId());
             return new BaseQueryResult<>(() -> result.stream(), () -> result);
 
         }

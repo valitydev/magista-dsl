@@ -22,15 +22,13 @@ public abstract class BaseQueryBuilder implements QueryBuilder {
     }
 
     @Override
-    public Query buildQuery(List<QueryPart> queryParts, String continuationToken, QueryPart parentQueryPart, QueryBuilder baseBuilder) throws QueryBuilderException {
+    public Query buildQuery(List<QueryPart> queryParts, String continuationToken, QueryPart parentQueryPart,
+                            QueryBuilder baseBuilder) throws QueryBuilderException {
         try {
-            List<Query> queries = queryParts.isEmpty() ? Collections.emptyList() : builders.stream()
-                    .filter(
-                            builder -> builder.apply(queryParts, parentQueryPart))
-                    .map(
-                            builder -> builder.buildQuery(queryParts, continuationToken, parentQueryPart, baseBuilder == null ? this : baseBuilder)
-                    )
-                    .collect(Collectors.toList());
+            List<Query> queries = queryParts.isEmpty() ? Collections.emptyList() :
+                    builders.stream().filter(builder -> builder.apply(queryParts, parentQueryPart))
+                            .map(builder -> builder.buildQuery(queryParts, continuationToken, parentQueryPart,
+                                    baseBuilder == null ? this : baseBuilder)).collect(Collectors.toList());
             if (queries.size() > 1) {
                 throw new QueryBuilderException("Build result has more than one query");
             } else if (queries.size() == 1) {

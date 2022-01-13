@@ -22,19 +22,21 @@ public class JsonQueryParserTest {
             mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             return mapper;
         }
-    }.withQueryParser(new BaseQueryParser(Arrays.asList(new RootQuery.RootParser(), new DummiesFunction.DummiesParser())) {
-        @Override
-        public boolean apply(Map<String, Object> source, QueryPart parent) {
-            return true;
-        }
-    });
+    }.withQueryParser(
+            new BaseQueryParser(Arrays.asList(new RootQuery.RootParser(), new DummiesFunction.DummiesParser())) {
+                @Override
+                public boolean apply(Map<String, Object> source, QueryPart parent) {
+                    return true;
+                }
+            });
 
     @Test
     public void testNoFunctionParse() {
         String json = "{'query': {'keksiki': {}}}";
         List<QueryPart> queryParts = parser.parseQuery(json);
         assertEquals("root query", 1, queryParts.size());
-        assertEquals("root query has 0 parameter - no recognized function names", 0, queryParts.get(0).getChildren().size());
+        assertEquals("root query has 0 parameter - no recognized function names", 0,
+                queryParts.get(0).getChildren().size());
 
     }
 
@@ -47,19 +49,25 @@ public class JsonQueryParserTest {
 
     @Test(expected = QueryParserException.class)
     public void testKekParseError() {
-        String json = "{'query': {'dummies': {'id': '1','kek': 'kekekekkekekekke','from_time': '2016-03-22T00:12:00Z','to_time': '2016-03-22T01:12:00Z'}}}";
+        String json =
+                "{'query': {'dummies': {'id': '1','kek': 'kekekekkekekekke','from_time': '2016-03-22T00:12:00Z'," +
+                        "'to_time': '2016-03-22T01:12:00Z'}}}";
         parser.parseQuery(json);
     }
 
     @Test
     public void testHappyPath() {
-        String json = "{'query': {'dummies': {'id': '1','kek': 'kek','from_time': '2016-03-22T00:12:00Z','to_time': '2016-03-22T01:12:00Z'}}}";
+        String json =
+                "{'query': {'dummies': {'id': '1','kek': 'kek','from_time': '2016-03-22T00:12:00Z'," +
+                        "'to_time': '2016-03-22T01:12:00Z'}}}";
         parser.parseQuery(json);
     }
 
     @Test(expected = QueryParserException.class)
     public void testTimeParseError() {
-        String json = "{'query': {'dummies': {'id': '1','kek': '2','from_time': '2016-03-22T00:12:00Z','to_time': '2016-03-22T00:00:00Z'}}}";
+        String json =
+                "{'query': {'dummies': {'id': '1','kek': '2','from_time': '2016-03-22T00:12:00Z'," +
+                        "'to_time': '2016-03-22T00:00:00Z'}}}";
         parser.parseQuery(json);
     }
 }

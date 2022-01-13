@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface QueryBuilder {
 
-    Query buildQuery(List<QueryPart> queryParts, String continuationToken, QueryPart parentQueryPart, QueryBuilder baseBuilder) throws QueryBuilderException;
+    Query buildQuery(List<QueryPart> queryParts, String continuationToken, QueryPart parentQueryPart,
+                     QueryBuilder baseBuilder) throws QueryBuilderException;
 
     boolean apply(List<QueryPart> queryParts, QueryPart parent);
 }

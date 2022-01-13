@@ -8,8 +8,8 @@ public class QueryPart {
     public static final Object DEFAULT_DESCRIPTOR = "default_descriptor";
     private final Object descriptor;
     private final QueryParameters parameters;
-    private List<QueryPart> children;
     private final QueryPart parent;
+    private List<QueryPart> children;
 
     public QueryPart(Object descriptor, QueryParameters parameters) {
         this(descriptor, parameters, null);
@@ -45,16 +45,13 @@ public class QueryPart {
     }
 
     public boolean isEmpty() {
-        return descriptor.equals(DEFAULT_DESCRIPTOR) && parameters.getParametersMap().isEmpty() && (children == null || children.isEmpty());
+        return descriptor.equals(DEFAULT_DESCRIPTOR) && parameters.getParametersMap().isEmpty()
+                && (children == null || children.isEmpty());
     }
 
     @Override
     public String toString() {
-        return "QueryPart{" +
-                "descriptor=" + descriptor +
-                ", parameters=" + parameters +
-                ", children=" + children +
-                ", parent=" + (parent == null ? "null" : "notnull") +
-                '}';
+        return "QueryPart{" + "descriptor=" + descriptor + ", parameters=" + parameters + ", children=" + children +
+                ", parent=" + (parent == null ? "null" : "notnull") + '}';
     }
 }

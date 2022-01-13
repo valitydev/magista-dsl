@@ -9,10 +9,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class QueryParameters {
-    public interface QueryParametersRef<T extends QueryParameters> {
-        T newInstance(Map<String, Object> parameters, QueryParameters derivedParameters);
-    }
-
     private final Map<String, Object> parameters;
     private final QueryParameters derivedParameters;
 
@@ -26,7 +22,8 @@ public class QueryParameters {
     }
 
     public Object getParameter(String key, boolean deepSearch) {
-        return parameters.getOrDefault(key, deepSearch && derivedParameters != null ? derivedParameters.getParameter(key, deepSearch) : null);
+        return parameters.getOrDefault(key,
+                deepSearch && derivedParameters != null ? derivedParameters.getParameter(key, deepSearch) : null);
     }
 
     public <T extends QueryParameters> T removeParameters(QueryParametersRef<T> parametersRef, String... keys) {
@@ -99,11 +96,15 @@ public class QueryParameters {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         QueryParameters that = (QueryParameters) o;
-        return Objects.equals(parameters, that.parameters) &&
-                Objects.equals(derivedParameters, that.derivedParameters);
+        return Objects.equals(parameters, that.parameters)
+                && Objects.equals(derivedParameters, that.derivedParameters);
     }
 
     @Override
@@ -113,9 +114,11 @@ public class QueryParameters {
 
     @Override
     public String toString() {
-        return "QueryParameters{" +
-                "parameters=" + parameters +
-                ", derivedParameters=" + (derivedParameters == null ? "null" : "notnull") +
-                '}';
+        return "QueryParameters{" + "parameters=" + parameters + ", derivedParameters=" +
+                (derivedParameters == null ? "null" : "notnull") + '}';
+    }
+
+    public interface QueryParametersRef<T extends QueryParameters> {
+        T newInstance(Map<String, Object> parameters, QueryParameters derivedParameters);
     }
 }

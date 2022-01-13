@@ -25,23 +25,27 @@ public class QueryBuilderImplTest {
             mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             return mapper;
         }
-    }.withQueryParser(new BaseQueryParser(Arrays.asList(new RootQuery.RootParser(), new DummiesFunction.DummiesParser())) {
-        @Override
-        public boolean apply(Map<String, Object> source, QueryPart parent) {
-            return true;
-        }
-    });
+    }.withQueryParser(
+            new BaseQueryParser(Arrays.asList(new RootQuery.RootParser(), new DummiesFunction.DummiesParser())) {
+                @Override
+                public boolean apply(Map<String, Object> source, QueryPart parent) {
+                    return true;
+                }
+            });
 
-    private QueryBuilder builder = new BaseQueryBuilder(Arrays.asList(new RootQuery.RootBuilder(), new DummiesFunction.DummiesBuilder())) {
-        @Override
-        public boolean apply(List<QueryPart> queryParts, QueryPart parent) {
-            return true;
-        }
-    };
+    private final QueryBuilder builder =
+            new BaseQueryBuilder(Arrays.asList(new RootQuery.RootBuilder(), new DummiesFunction.DummiesBuilder())) {
+                @Override
+                public boolean apply(List<QueryPart> queryParts, QueryPart parent) {
+                    return true;
+                }
+            };
 
     @Test
     public void test() {
-        String json = "{'query': {'dummies': {'id': '1','kek':'kek','from_time': '2016-03-22T00:12:00Z','to_time': '2016-03-22T01:12:00Z'}}}";
+        String json =
+                "{'query': {'dummies': {'id': '1','kek':'kek','from_time': '2016-03-22T00:12:00Z'," +
+                        "'to_time': '2016-03-22T01:12:00Z'}}}";
         Query query = buildQuery(json);
         assertTrue(query instanceof RootQuery);
         query.getDescriptor();

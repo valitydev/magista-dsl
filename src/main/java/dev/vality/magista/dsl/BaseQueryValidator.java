@@ -21,9 +21,11 @@ public abstract class BaseQueryValidator implements QueryValidator {
         }
     }
 
-    protected <T extends QueryParameters> T checkParamsType(QueryParameters parameters, Class<? extends QueryParameters> expectedType) {
+    protected <T extends QueryParameters> T checkParamsType(QueryParameters parameters,
+                                                            Class<? extends QueryParameters> expectedType) {
         if (!expectedType.isAssignableFrom(parameters.getClass())) {
-            checkParamsResult(true, "Parameters has wrong type:" + parameters.getClass() + ", expected: " + expectedType);
+            checkParamsResult(true,
+                    "Parameters has wrong type:" + parameters.getClass() + ", expected: " + expectedType);
         }
         return (T) parameters;
     }

@@ -16,7 +16,8 @@ public class QueryExecutionException extends QueryProcessingException {
         super(cause);
     }
 
-    public QueryExecutionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public QueryExecutionException(String message, Throwable cause, boolean enableSuppression,
+                                   boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

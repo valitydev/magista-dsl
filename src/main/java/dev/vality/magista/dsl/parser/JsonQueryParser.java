@@ -15,7 +15,7 @@ public class JsonQueryParser implements QueryParser<String> {
 
     private QueryParser<Map<String, Object>> queryPartParser;
 
-    public JsonQueryParser withQueryParser(QueryParser<Map<String, Object>> queryPartParser){
+    public JsonQueryParser withQueryParser(QueryParser<Map<String, Object>> queryPartParser) {
         this.queryPartParser = queryPartParser;
         return this;
     }
@@ -32,7 +32,7 @@ public class JsonQueryParser implements QueryParser<String> {
             return queryPartParser.parseQuery(jsonMap, parent);
 
         } catch (IOException e) {
-            throw new QueryParserException("Failed to parse received json request: "+e.getMessage(), e);
+            throw new QueryParserException("Failed to parse received json request: " + e.getMessage(), e);
         }
     }
 
@@ -47,6 +47,7 @@ public class JsonQueryParser implements QueryParser<String> {
     }
 
     protected Map<String, Object> parseJsonMap(String data) throws IOException {
-        return getMapper().readerFor(new TypeReference<Map<String, Object>>() {}).readValue(data);
+        return getMapper().readerFor(new TypeReference<Map<String, Object>>() {
+        }).readValue(data);
     }
 }
